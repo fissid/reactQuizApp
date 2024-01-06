@@ -7,6 +7,7 @@ import Start from "./Start";
 import Question from "./Question";
 import NextButton from "./NextButton";
 import Progress from "./Progress";
+import FinishScreen from "./FinishScreen";
 
 const INITIALSTATE = {
   questions: [],
@@ -48,6 +49,11 @@ function reducer(state, action) {
         currentQuestion: state.currentQuestion + 1,
         answer: null,
       };
+    case "finished":
+      return {
+        ...state,
+        status: "finished",
+      };
     default:
       throw new Error("smt happened");
   }
@@ -83,9 +89,10 @@ export default function App() {
           <>
             <Progress currentQuestion={currentQuestion} numQuestions={numQuestions} points={points} maxPossiblePoints={maxPossiblePoints} />
             <Question currentQuestion={questions[currentQuestion]} dispatch={dispatch} answer={answer} />
-            <NextButton dispatch={dispatch} answer={answer} />
+            <NextButton dispatch={dispatch} answer={answer} currentQuestion={currentQuestion} numQuestions={numQuestions} />
           </>
         )}
+        {status === "finished" && <FinishScreen points={points} maxPossiblePoints={maxPossiblePoints} />}
       </Main>
     </div>
   );

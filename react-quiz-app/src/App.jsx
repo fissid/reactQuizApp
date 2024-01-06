@@ -44,7 +44,8 @@ function reducer(state, action) {
     case "nextQuestion":
       return {
         ...state,
-        currentQuestion: state.currentQuestion++,
+        currentQuestion: state.currentQuestion + 1,
+        answer: null,
       };
     default:
       throw new Error("smt happened");

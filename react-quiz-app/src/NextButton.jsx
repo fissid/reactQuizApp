@@ -1,4 +1,8 @@
 export default function NextButton({ dispatch, answer }) {
   if (answer === null) return null;
-  return <div></div>;
+  return (
+    <button className="btn btn-ui" onClick={() => dispatch({ type: "nextQuestion" })}>
+      Next
+    </button>
+  );
 }

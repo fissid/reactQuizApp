@@ -12,6 +12,7 @@ const INITIALSTATE = {
   // loading, error, ready, active, finish
   status: "loading",
   currentQuestion: 0,
+  userAnswer: null,
 };
 function reducer(state, action) {
   switch (action.type) {
@@ -31,6 +32,11 @@ function reducer(state, action) {
         ...state,
         status: "active",
       };
+    case "newAnswer":
+      return {
+        ...state,
+        userAnswer: action.payload,
+      };
     default:
       throw new Error("smt happened");
   }
@@ -39,7 +45,7 @@ function reducer(state, action) {
 export default function App() {
   const [state, dispatch] = useReducer(reducer, INITIALSTATE);
 
-  const { questions, status, currentQuestion } = state;
+  const { questions, status, currentQuestion, userAnswer } = state;
   const numQuestions = questions.length;
   useEffect(function () {
     async function fetchQuestions() {
@@ -61,7 +67,7 @@ export default function App() {
         {status === "loading" && <Loader />}
         {status === "error" && <Error />}
         {status === "ready" && <Start numQuestions={numQuestions} dispatch={dispatch} />}
-        {status === "active" && <Question currentQuestion={questions[currentQuestion]} />}
+        {status === "active" && <Question currentQuestion={questions[currentQuestion]} dispatch={dispatch} userAnswer={userAnswer} />}
       </Main>
     </div>
   );

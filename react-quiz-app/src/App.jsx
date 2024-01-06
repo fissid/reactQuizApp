@@ -5,6 +5,7 @@ import Loader from "./Loader";
 import Error from "./Error";
 import Start from "./Start";
 import Question from "./Question";
+import NextButton from "./NextButton";
 
 const INITIALSTATE = {
   questions: [],
@@ -12,7 +13,8 @@ const INITIALSTATE = {
   // loading, error, ready, active, finish
   status: "loading",
   currentQuestion: 0,
-  userAnswer: null,
+  answer: null,
+  points: 0,
 };
 function reducer(state, action) {
   switch (action.type) {
@@ -33,9 +35,16 @@ function reducer(state, action) {
         status: "active",
       };
     case "newAnswer":
+      const question = state.questions.at(state.currentQuestion);
       return {
         ...state,
-        userAnswer: action.payload,
+        answer: action.payload,
+        points: action.payload === question.correctOption ? state.points + question.points : state.points,
+      };
+    case "nextQuestion":
+      return {
+        ...state,
+        currentQuestion: state.currentQuestion++,
       };
     default:
       throw new Error("smt happened");
@@ -45,7 +54,7 @@ function reducer(state, action) {
 export default function App() {
   const [state, dispatch] = useReducer(reducer, INITIALSTATE);
 
-  const { questions, status, currentQuestion, userAnswer } = state;
+  const { questions, status, currentQuestion, answer } = state;
   const numQuestions = questions.length;
   useEffect(function () {
     async function fetchQuestions() {
@@ -67,7 +76,12 @@ export default function App() {
         {status === "loading" && <Loader />}
         {status === "error" && <Error />}
         {status === "ready" && <Start numQuestions={numQuestions} dispatch={dispatch} />}
-        {status === "active" && <Question currentQuestion={questions[currentQuestion]} dispatch={dispatch} userAnswer={userAnswer} />}
+        {status === "active" && (
+          <>
+            <Question currentQuestion={questions[currentQuestion]} dispatch={dispatch} answer={answer} />
+            <NextButton dispatch={dispatch} answer={answer} />
+          </>
+        )}
       </Main>
     </div>
   );

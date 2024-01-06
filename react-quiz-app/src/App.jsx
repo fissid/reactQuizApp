@@ -17,6 +17,7 @@ const INITIALSTATE = {
   currentQuestion: 0,
   answer: null,
   points: 0,
+  highScore: 0,
 };
 function reducer(state, action) {
   switch (action.type) {
@@ -53,6 +54,13 @@ function reducer(state, action) {
       return {
         ...state,
         status: "finished",
+        highScore: state.points > state.highScore ? state.points : state.highScore,
+      };
+    case "reset":
+      return {
+        ...INITIALSTATE,
+        questions: state.questions,
+        status: "ready",
       };
     default:
       throw new Error("smt happened");
@@ -62,7 +70,7 @@ function reducer(state, action) {
 export default function App() {
   const [state, dispatch] = useReducer(reducer, INITIALSTATE);
 
-  const { questions, status, currentQuestion, answer, points } = state;
+  const { questions, status, currentQuestion, answer, points, highScore } = state;
   const numQuestions = questions.length;
   const maxPossiblePoints = questions.reduce((prev, cur) => prev + cur.points, 0);
   useEffect(function () {
@@ -92,7 +100,7 @@ export default function App() {
             <NextButton dispatch={dispatch} answer={answer} currentQuestion={currentQuestion} numQuestions={numQuestions} />
           </>
         )}
-        {status === "finished" && <FinishScreen points={points} maxPossiblePoints={maxPossiblePoints} />}
+        {status === "finished" && <FinishScreen points={points} maxPossiblePoints={maxPossiblePoints} highScore={highScore} dispatch={dispatch} />}
       </Main>
     </div>
   );

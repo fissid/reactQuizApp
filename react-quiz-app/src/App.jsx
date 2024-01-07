@@ -8,6 +8,8 @@ import Question from "./Question";
 import NextButton from "./NextButton";
 import Progress from "./Progress";
 import FinishScreen from "./FinishScreen";
+import Timer from "./Timer";
+import Footer from "./Footer";
 
 const INITIALSTATE = {
   questions: [],
@@ -97,7 +99,10 @@ export default function App() {
           <>
             <Progress currentQuestion={currentQuestion} numQuestions={numQuestions} points={points} maxPossiblePoints={maxPossiblePoints} />
             <Question currentQuestion={questions[currentQuestion]} dispatch={dispatch} answer={answer} />
-            <NextButton dispatch={dispatch} answer={answer} currentQuestion={currentQuestion} numQuestions={numQuestions} />
+            <Footer>
+              <NextButton dispatch={dispatch} answer={answer} currentQuestion={currentQuestion} numQuestions={numQuestions} />
+              <Timer />
+            </Footer>
           </>
         )}
         {status === "finished" && <FinishScreen points={points} maxPossiblePoints={maxPossiblePoints} highScore={highScore} dispatch={dispatch} />}

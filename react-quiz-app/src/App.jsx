@@ -11,6 +11,7 @@ import FinishScreen from "./FinishScreen";
 import Timer from "./Timer";
 import Footer from "./Footer";
 
+const SEC_PER_QUESTION = 30;
 const INITIALSTATE = {
   questions: [],
   // different status during the time in application
@@ -20,6 +21,7 @@ const INITIALSTATE = {
   answer: null,
   points: 0,
   highScore: 0,
+  secondsRemained: null,
 };
 function reducer(state, action) {
   switch (action.type) {
@@ -38,6 +40,7 @@ function reducer(state, action) {
       return {
         ...state,
         status: "active",
+        secondsRemained: state.questions.length * SEC_PER_QUESTION,
       };
     case "newAnswer":
       const question = state.questions.at(state.currentQuestion);
@@ -64,6 +67,12 @@ function reducer(state, action) {
         questions: state.questions,
         status: "ready",
       };
+    case "tick":
+      return {
+        ...state,
+        secondsRemained: state.secondsRemained - 1,
+        status: state.secondsRemained === 0 ? "finished" : state.status,
+      };
     default:
       throw new Error("smt happened");
   }
@@ -72,7 +81,7 @@ function reducer(state, action) {
 export default function App() {
   const [state, dispatch] = useReducer(reducer, INITIALSTATE);
 
-  const { questions, status, currentQuestion, answer, points, highScore } = state;
+  const { questions, status, currentQuestion, answer, points, highScore, secondsRemained } = state;
   const numQuestions = questions.length;
   const maxPossiblePoints = questions.reduce((prev, cur) => prev + cur.points, 0);
   useEffect(function () {
@@ -101,7 +110,7 @@ export default function App() {
             <Question currentQuestion={questions[currentQuestion]} dispatch={dispatch} answer={answer} />
             <Footer>
               <NextButton dispatch={dispatch} answer={answer} currentQuestion={currentQuestion} numQuestions={numQuestions} />
-              <Timer />
+              <Timer dispatch={dispatch} secondsRemained={secondsRemained} />
             </Footer>
           </>
         )}

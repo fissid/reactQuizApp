@@ -63,12 +63,12 @@ function reducer(state, action) {
     case "withdraw":
       return {
         ...state,
-        balance: state.balance >= 50 ? state.balance - 50 : state.balance,
+        balance: state.balance >= 50 ? state.balance - action.payload : state.balance,
       };
     case "deposit":
       return {
         ...state,
-        balance: state.balance + 150,
+        balance: state.balance + action.payload,
       };
     default:
       throw new Error("smt happened");
@@ -90,12 +90,12 @@ export default function App() {
         </button>
       </p>
       <p>
-        <button onClick={() => dispatch({ type: "deposit" })} disabled={isActive ? false : true}>
+        <button onClick={() => dispatch({ type: "deposit", payload: 150 })} disabled={isActive ? false : true}>
           Deposit 150
         </button>
       </p>
       <p>
-        <button onClick={() => dispatch({ type: "withdraw" })} disabled={isActive ? false : true}>
+        <button onClick={() => dispatch({ type: "withdraw", payload: 50 })} disabled={isActive ? false : true}>
           Withdraw 50
         </button>
       </p>

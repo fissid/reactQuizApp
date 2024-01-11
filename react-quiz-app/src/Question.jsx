@@ -8,4 +8,4 @@ export default function Question({ currentQuestion, dispatch, answer }) {
       <Answers currentQuestion={currentQuestion} dispatch={dispatch} answer={answer} />
     </div>
   );
-
+}

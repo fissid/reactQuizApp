@@ -33,7 +33,9 @@ function reducer(state, action) {
       };
     case "dataFailed":
       return {
-
+        ...state,
+        status: "error",
+      };
     case "start":
       return {
         ...state,

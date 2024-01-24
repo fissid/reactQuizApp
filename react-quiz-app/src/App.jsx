@@ -31,7 +31,7 @@ function reducer(state, action) {
         questions: action.payload,
         status: "ready",
       };
-    case "dataFailed":
+
       return {
         ...state,
         status: "error",
